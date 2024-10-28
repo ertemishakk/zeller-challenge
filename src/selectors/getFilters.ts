@@ -4,19 +4,10 @@ const getSearch = (state: AppState) => state.search;
 const getRole = (state: AppState) => state.role;
 
 export default createSelector([getSearch, getRole], (search, role) => {
-  const filter: TableZellerCustomerFilterInput = {};
+  const filter: TableZellerCustomerFilterInput = {
+    ...(search && { name: { contains: search } }),
+    ...(role && { role: { eq: role } }),
+  };
 
-  if (search) {
-    filter.name = {
-      contains: search,
-    };
-  }
-
-  if (role) {
-    filter.role = {
-      eq: role,
-    };
-  }
-
-  return search || role ? { filter } : {};
+  return Object.keys(filter).length ? { filter } : {};
 });
